@@ -1,21 +1,21 @@
 import type { FC } from "react";
 import { Button } from "@/components/ui/button";
-import { Layers, Image } from "lucide-react";
+import { Layers, Database } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
 
 export const ToolBox: FC = () => {
   return (
     <div className="w-[400px] h-full border-r">
       <div className="p-2 border-b flex gap-1 items-center">
-        <NavLink to={"/layers"}>
+        <NavLink to={"/sources"}>
           <Button variant={"secondary"} size={"icon"} className="size-8">
-            <Layers />
+            <Database />
           </Button>
         </NavLink>
 
-        <NavLink to={"/sprites"}>
+        <NavLink to={"/layers"}>
           <Button variant={"secondary"} size={"icon"} className="size-8">
-            <Image />
+            <Layers />
           </Button>
         </NavLink>
       </div>
