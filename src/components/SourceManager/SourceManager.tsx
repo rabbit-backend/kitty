@@ -1,29 +1,30 @@
-import { useRef, type FC } from "react";
+import { type FC } from "react";
 import { Button } from "@/components/ui/button";
 
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { CloudUpload } from "lucide-react";
-import { Checkbox } from "../ui/checkbox";
+
 import { TileSource } from "./TileSource";
 import { RasterSource } from "./RasterSource";
 import { GeoJsonSource } from "./GeoJsonSource";
+import { useSourceStore } from "@/store/sources";
+import type { BaseSource } from "@/types/sources";
+import { SwatchBook, Image, FileJson2 } from "lucide-react";
 
 export const SourceManager: FC = () => {
+  const sources = useSourceStore(
+    (state) => state.sources as unknown as BaseSource[]
+  );
+
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1">
       <div className="flex justify-end">
         <Dialog>
           <form>
@@ -60,7 +61,26 @@ export const SourceManager: FC = () => {
           </form>
         </Dialog>
       </div>
-      <div className="flex flex-col gap-1">{/* List of layers go here */}</div>
+      <div className="flex flex-col gap-1 p-1">
+        {sources.map((source, id) => {
+          return <ListItem key={id} {...source} />;
+        })}
+      </div>
+    </div>
+  );
+};
+
+const ListItem: FC<BaseSource> = (props) => {
+  return (
+    <div className="border p-2 min-h-12 flex items-center gap-1 bg-card">
+      {props.type === "tile" && (
+        <SwatchBook className="text-muted-foreground" />
+      )}
+      {props.type === "raster" && <Image className="text-muted-foreground" />}
+      {props.type === "geojson" && (
+        <FileJson2 className="text-muted-foreground" />
+      )}
+      <span className="text-lg">{props.name}</span>
     </div>
   );
 };

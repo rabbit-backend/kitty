@@ -6,17 +6,42 @@ import { Textarea } from "../ui/textarea";
 import { CloudUpload } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { DialogClose, DialogFooter } from "../ui/dialog";
+import { useForm } from "react-hook-form";
+import type { GeoJsonSource as GeoJsonSourceInput } from "@/types/sources";
+import { useSourceStore } from "@/store/sources";
 
 export const GeoJsonSource: FC = () => {
   const fileUploadInputRef = useRef<HTMLInputElement>(undefined!);
 
-  const [isClusteringEnabled, setIsClusteringEnabled] = useState(false);
+  const { register, handleSubmit, watch, setValue } =
+    useForm<GeoJsonSourceInput>({
+      defaultValues: {
+        type: "geojson",
+        data: JSON.stringify({}),
+        name: "",
+        cluster: false,
+      },
+    });
+
+  const createGeoJsonSource = useSourceStore(
+    (store) => store.createGeoJsonSource
+  );
 
   return (
-    <>
+    <form
+      onSubmit={handleSubmit((values) => {
+        createGeoJsonSource(values);
+      })}
+      className="flex flex-col gap-2"
+    >
       <div className="flex flex-col gap-1">
         <Label htmlFor="name">Name</Label>
-        <Input id="name" name="name" type="text" placeholder="earthquakes" />
+        <Input
+          id="name"
+          type="text"
+          placeholder="earthquakes"
+          {...register("name")}
+        />
       </div>
 
       <div className="flex flex-col gap-1">
@@ -24,9 +49,9 @@ export const GeoJsonSource: FC = () => {
         <div className="relative">
           <Textarea
             id="name"
-            name="name"
             placeholder="geojson"
             className="max-h-[240px] min-h-[140px]"
+            {...register("data")}
           />
           <input type="file" hidden ref={fileUploadInputRef} />
           <span className="absolute inline bottom-0 right-0">
@@ -43,16 +68,15 @@ export const GeoJsonSource: FC = () => {
 
       <div className="flex flex-row gap-2 items-center">
         <Checkbox
-          checked={isClusteringEnabled}
-          onCheckedChange={(checked) =>
-            setIsClusteringEnabled(checked ? true : false)
+          checked={watch("cluster")}
+          onCheckedChange={(e) =>
+            e ? setValue("cluster", true) : setValue("cluster", false)
           }
-          name="clustering"
         />
         <Label htmlFor="clustering">Cluster</Label>
       </div>
 
-      {isClusteringEnabled && (
+      {watch("cluster") && (
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col gap-1">
             <Label htmlFor="clusterMinZoom">Min Zoom</Label>
@@ -74,8 +98,10 @@ export const GeoJsonSource: FC = () => {
         <DialogClose asChild>
           <Button variant="outline">Cancel</Button>
         </DialogClose>
-        <Button type="submit">Create</Button>
+        <DialogClose asChild>
+          <Button type="submit">Create</Button>
+        </DialogClose>
       </DialogFooter>
-    </>
+    </form>
   );
 };
