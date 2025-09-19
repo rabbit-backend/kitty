@@ -24,7 +24,7 @@ export const SourceManager: FC = () => {
   );
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-2">
       <div className="flex justify-end">
         <Dialog>
           <form>
@@ -61,7 +61,7 @@ export const SourceManager: FC = () => {
           </form>
         </Dialog>
       </div>
-      <div className="flex flex-col gap-1 p-1">
+      <div className="flex flex-col gap-1">
         {sources.map((source, id) => {
           return <ListItem key={id} {...source} />;
         })}
@@ -72,7 +72,7 @@ export const SourceManager: FC = () => {
 
 const ListItem: FC<BaseSource> = (props) => {
   return (
-    <div className="border p-2 min-h-12 flex items-center gap-1 bg-card">
+    <div className="border p-2 min-h-12 flex items-center gap-1 bg-card rounded-md">
       {props.type === "tile" && (
         <SwatchBook className="text-muted-foreground" />
       )}
