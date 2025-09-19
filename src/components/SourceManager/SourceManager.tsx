@@ -17,10 +17,11 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { CloudUpload } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
+import { TileSource } from "./TileSource";
+import { RasterSource } from "./RasterSource";
+import { GeoJsonSource } from "./GeoJsonSource";
 
 export const SourceManager: FC = () => {
-  const fileUploadInputRef = useRef<HTMLInputElement>(undefined!);
-
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-end">
@@ -40,126 +41,21 @@ export const SourceManager: FC = () => {
                   <TabsTrigger value="geojson">GeoJson</TabsTrigger>
                 </TabsList>
                 <TabsContent value="tiles" className="mt-2 flex flex-col gap-4">
-                  <div className="flex flex-col gap-1">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      type="text"
-                      placeholder="buildings"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <Label htmlFor="url">URL</Label>
-                    <Input
-                      id="url"
-                      name="url"
-                      type="text"
-                      placeholder="http://example.com/tile.json"
-                    />
-                  </div>
+                  <TileSource />
                 </TabsContent>
                 <TabsContent
                   value="raster"
                   className="mt-2 flex flex-col gap-4"
                 >
-                  <div className="flex flex-col gap-1">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      type="text"
-                      placeholder="coverage"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <Label htmlFor="url">URL</Label>
-                    <Input
-                      id="url"
-                      name="url"
-                      type="text"
-                      placeholder="https://example.com/wms?request=GetMap&layer=coverage&bbox={bbox-epsg-3857}"
-                    />
-                  </div>
+                  <RasterSource />
                 </TabsContent>
                 <TabsContent
                   value="geojson"
                   className="mt-2 flex flex-col gap-4"
                 >
-                  <div className="flex flex-col gap-1">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      type="text"
-                      placeholder="earthquakes"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <Label htmlFor="name">Data</Label>
-                    <div className="relative">
-                      <Textarea
-                        id="name"
-                        name="name"
-                        placeholder="geojson"
-                        className="max-h-[240px] min-h-[140px]"
-                      />
-                      <input type="file" hidden ref={fileUploadInputRef} />
-                      <span className="absolute inline bottom-0 right-0">
-                        <Button
-                          size={"icon"}
-                          variant={"link"}
-                          onClick={() => fileUploadInputRef.current.click()}
-                        >
-                          <CloudUpload />
-                        </Button>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-row gap-2 items-center">
-                    <Checkbox name="clustering" />
-                    <Label htmlFor="clustering">Cluster</Label>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="flex flex-col gap-1">
-                      <Label htmlFor="clusterMinZoom">Min Zoom</Label>
-                      <Input
-                        id="clusterMinZoom"
-                        name="clusterMinZoom"
-                        type="number"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <Label htmlFor="clusterMaxZoom">Max Zoom</Label>
-                      <Input
-                        id="clusterMaxZoom"
-                        name="clusterMaxZoom"
-                        type="number"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <Label htmlFor="clusterRadius">Radius</Label>
-                      <Input
-                        id="clusterRadius"
-                        name="clusterRadius"
-                        type="number"
-                      />
-                    </div>
-                  </div>
+                  <GeoJsonSource />
                 </TabsContent>
               </Tabs>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button type="submit">Create</Button>
-              </DialogFooter>
             </DialogContent>
           </form>
         </Dialog>
